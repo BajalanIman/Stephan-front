@@ -65,7 +65,9 @@ const SingUp = () => {
       last_login_at: "2024-08-26T22:00:00.000Z",
     };
     axios
-      .post(`${BASE_URL}users`, data, { withCredentials: true })
+      .post("https://stephan-backend-production.up.railway.app/users", data, {
+        withCredentials: true,
+      })
       .then((res) => {
         localStorage.setItem("userId", res.data.user_id);
         if (res.data.message === "Record inserted successfully") {

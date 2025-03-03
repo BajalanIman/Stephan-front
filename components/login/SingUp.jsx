@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ReportIcon from "@mui/icons-material/Report";
 import axios from "axios";
 import adaptLogo from "./../../assets/Images/adaptLogo.png";
+import { BASE_URL } from "../../constants/constants";
 
 const SingUp = () => {
   const navigate = useNavigate();
@@ -11,13 +12,10 @@ const SingUp = () => {
   const [firstName, setFirstName] = useState("");
   const [lasrName, setLastName] = useState("");
   const [importedEmail, setImportedEmail] = useState("");
-
   const [password, setPassword] = useState("");
-
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorEmpty, setErrorEmpty] = useState(false);
-
   const [errorMessage, setErrorMessage] = useState("");
 
   const singupHandler = (event) => {
@@ -48,10 +46,12 @@ const SingUp = () => {
         setErrorEmpty(false);
         setErrorMessage("");
       }, 5000);
-    } else {
-      navigate("/conversation");
-      window.location.reload();
     }
+    // Removed premature navigation here so that the API call is executed before navigating.
+    // else {
+    //   navigate("/conversation");
+    //   window.location.reload();
+    // }
 
     const data = {
       user_config_id: 1,
@@ -64,28 +64,36 @@ const SingUp = () => {
       created_at: "2024-08-26T22:00:00.000Z",
       last_login_at: "2024-08-26T22:00:00.000Z",
     };
-    axios.post(`http://localhost:8800/users`, data).then((res) => {
-      localStorage.setItem("userId", res.data.user_id);
-      if (res.data.message == "Record inserted successfully") {
-        setUsername(""),
-          setFirstName(""),
-          setLastName(""),
-          setImportedEmail(""),
+    axios
+      .post(`${BASE_URL}users`, data, { withCredentials: true })
+      .then((res) => {
+        localStorage.setItem("userId", res.data.user_id);
+        if (res.data.message === "Record inserted successfully") {
+          setUsername("");
+          setFirstName("");
+          setLastName("");
+          setImportedEmail("");
           setPassword("");
-      }
-    });
+          // Navigate to "/conversation" only after a successful API response.
+          navigate("/conversation");
+          window.location.reload();
+        }
+      });
   };
 
   return (
     <div className=" w-full h-screen flex flex-col justify-center items-center">
       <Link to="/dataProtection">
-        <img src={adaptLogo} className="w-20 opacity-70 cursor-pointer" />
+        <img
+          src={adaptLogo}
+          className="w-20 opacity-70 cursor-pointer"
+          alt="Logo"
+        />
       </Link>
       <div className="mt-6 h-30 flex flex-col justify-center items-center gap-3 ">
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           Create an account
         </Typography>
-
         <Box sx={{ display: "flex", flexDirection: "column", mt: 1 }}>
           {(errorEmail || errorPassword || errorEmpty) && (
             <Typography
@@ -157,7 +165,6 @@ const SingUp = () => {
               mb: "20px",
             }}
           />
-
           <TextField
             id="outlined-password-input"
             label="Password*"
@@ -170,14 +177,12 @@ const SingUp = () => {
               setPassword(e.target.value);
             }}
           />
-
           <Button
             sx={{ color: "white", bgcolor: "#10a37f", textTransform: "none" }}
             onClick={singupHandler}
           >
             Sing up
           </Button>
-
           <Typography
             variant="caption"
             sx={{

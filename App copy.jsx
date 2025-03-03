@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "../src/constants/constants";
 
 function App() {
   const [Person, setPerson] = useState([]);
@@ -7,7 +8,7 @@ function App() {
   useEffect(() => {
     const fetchAllperson = async () => {
       try {
-        const res = await axios.get("http://localhost:8800/student");
+        const res = await axios.get(`${BASE_URL}student`);
         setPerson(res.data);
       } catch (err) {
         console.log(err);

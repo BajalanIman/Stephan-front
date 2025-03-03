@@ -13,6 +13,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import adaptLogo from "./../../assets/Images/adaptLogo.png";
 import { Link } from "react-router-dom";
+import { BASE_URL } from "../../constants/constants";
 
 const UserManagement = () => {
   const [usersFromDatabase, setUsersFromDatabase] = useState([]);
@@ -20,7 +21,7 @@ const UserManagement = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8800/users");
+        const response = await axios.get(`${BASE_URL}users`);
         setUsersFromDatabase(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);

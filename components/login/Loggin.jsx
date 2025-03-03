@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ReportIcon from "@mui/icons-material/Report";
 import axios from "axios";
 import adaptLogo from "./../../assets/Images/adaptLogo.png";
+import { BASE_URL } from "../../constants/constants";
 
 function Loggin() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function Loggin() {
 
   const loginBtn = async () => {
     try {
-      const response = await axios.post("http://localhost:8800/check-user", {
+      const response = await axios.post(`${BASE_URL}check-user`, {
         email: importedEmail,
         password: inputPassword,
       });

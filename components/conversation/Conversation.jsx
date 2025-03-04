@@ -7,7 +7,8 @@ import axios from "axios";
 import LoadingPage from "./LoadingPage";
 import Chats from "./Chats";
 import AdminPanel from "../Admin/AdminPanel";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+// import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { BASE_URL } from "../../constants/constants";
 
 const Conversation = () => {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -32,7 +33,7 @@ const Conversation = () => {
 
   const fetchConversations = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8800/conversations`);
+      const response = await axios.get(`${BASE_URL}conversations`);
       const filteredConversations = response.data.filter(
         (e) => e.user_id === userId
       );
@@ -49,6 +50,7 @@ const Conversation = () => {
     const payload = { messages: searchInput };
     setShowLoading(true);
 
+    // The below url is from the chatbot
     try {
       const response = await axios.post("http://127.0.0.1:5000/chat", payload, {
         headers: {
@@ -62,7 +64,7 @@ const Conversation = () => {
       let conversationId = customConversationId;
       if (!conversationId) {
         const conversationResponse = await axios.post(
-          "http://127.0.0.1:8800/conversations",
+          `${BASE_URL}conversations`,
           {
             user_id: userId,
             title: searchInput.slice(0, 50),
@@ -79,7 +81,7 @@ const Conversation = () => {
         answer: aiResponse,
       };
 
-      await axios.post("http://127.0.0.1:8800/messages", newMessage);
+      await axios.post(`${BASE_URL}messages`, newMessage);
 
       setCustomChat((prevChat) => [
         ...prevChat,

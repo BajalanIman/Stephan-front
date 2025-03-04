@@ -35,7 +35,7 @@ function Loggin() {
         localStorage.setItem("last_name", response.data.user.last_name);
 
         navigate("/conversation");
-        window.location.reload();
+        // window.location.reload();
       } else {
         setUserInDatabase(true);
         setTimeout(() => {

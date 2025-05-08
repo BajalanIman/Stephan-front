@@ -1,7 +1,14 @@
-import React from "react";
-import { Box, Button, Tooltip, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Tooltip, Typography } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import adaptLogo from "./../../assets/Images/adaptLogo.png";
+import {
+  ThumbDownAlt,
+  ThumbDownAltOutlined,
+  ThumbUpAlt,
+  ThumbUpAltOutlined,
+  VolumeUp,
+} from "@mui/icons-material";
 
 const Chats = ({ customChat }) => {
   const copyToClipboard = (text) => {
@@ -15,6 +22,29 @@ const Chats = ({ customChat }) => {
     );
   };
 
+  const [votes, setVotes] = useState({});
+
+  const handleThumbsUp = (id) => {
+    setVotes((prev) => ({
+      ...prev,
+      [id]: prev[id] === "up" ? null : "up",
+    }));
+  };
+
+  const handleThumbsDown = (id) => {
+    setVotes((prev) => ({
+      ...prev,
+      [id]: prev[id] === "down" ? null : "down",
+    }));
+  };
+
+  const speakText = (text) => {
+    const synth = window.speechSynthesis;
+    if (synth.speaking) synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    synth.speak(utterance);
+  };
+
   return (
     <div className="w-full h-[100%] min-h-screen pb-10">
       {customChat.map((message) => (
@@ -24,7 +54,6 @@ const Chats = ({ customChat }) => {
             marginTop: 2,
             marginX: 25,
             padding: 2,
-            // backgroundColor: "#f0f0f0",
             borderRadius: "10px",
           }}
         >
@@ -55,7 +84,7 @@ const Chats = ({ customChat }) => {
                   borderColor: "gray",
                   borderRadius: 5,
                   borderBottomRightRadius: 80,
-                  padding: "10px 15px 15px 15px",
+                  padding: "10px 15px 5px 15px",
                   bgcolor: "#B8C2A2",
                   minWidth: 400,
                   maxWidth: 500,
@@ -63,13 +92,46 @@ const Chats = ({ customChat }) => {
                   height: "fit-content",
                 }}
               >
+                <Typography>{message.answer}</Typography>
                 <Box
                   sx={{
+                    width: "80%",
                     display: "flex",
-                    justifyContent: "end",
-                    mt: 2,
+                    gap: 0.5,
+                    paddingTop: 2,
                   }}
                 >
+                  {votes[message.message_id] === "up" ? (
+                    <Tooltip title="Unselect like" arrow>
+                      <ThumbUpAlt
+                        onClick={() => handleThumbsUp(message.message_id)}
+                        style={{ color: "#565656", cursor: "pointer" }}
+                      />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Select like" arrow>
+                      <ThumbUpAltOutlined
+                        onClick={() => handleThumbsUp(message.message_id)}
+                        style={{ cursor: "pointer", color: "#565656" }}
+                      />
+                    </Tooltip>
+                  )}
+
+                  {votes[message.message_id] === "down" ? (
+                    <Tooltip title="Unselect dislike" arrow>
+                      <ThumbDownAlt
+                        onClick={() => handleThumbsDown(message.message_id)}
+                        style={{ color: "#565656", cursor: "pointer" }}
+                      />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Select dislike" arrow>
+                      <ThumbDownAltOutlined
+                        onClick={() => handleThumbsDown(message.message_id)}
+                        style={{ cursor: "pointer", color: "#565656" }}
+                      />
+                    </Tooltip>
+                  )}
                   <Tooltip title="copy to clipboard" arrow>
                     <ContentCopyIcon
                       onClick={() => copyToClipboard(message.answer)}
@@ -82,8 +144,18 @@ const Chats = ({ customChat }) => {
                       variant="contained"
                     />
                   </Tooltip>
+                  <Tooltip title="Speak" arrow>
+                    <VolumeUp
+                      onClick={() => speakText(message.answer)}
+                      sx={{
+                        fill: "#565656",
+                        cursor: "pointer",
+                        ":hover": { fill: "green" },
+                        ":active": { fill: "darkgreen" },
+                      }}
+                    />
+                  </Tooltip>
                 </Box>
-                <Typography>{message.answer}</Typography>
               </Box>
             </div>
           </div>

@@ -46,13 +46,13 @@ const Conversation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!searchInput.trim()) return;
+    // const response = await axios.post("http://127.0.0.1:5000/chat", payload,
 
     const payload = { messages: searchInput };
     setShowLoading(true);
 
-    // The below url is from the chatbot
     try {
-      const response = await axios.post("http://127.0.0.1:5000/chat", payload, {
+      const response = await axios.post("https://ai.scifor.de", payload, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -260,6 +260,9 @@ const Conversation = () => {
                 >
                   <input
                     onChange={(e) => setSearchInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleSubmit(e);
+                    }}
                     value={searchInput}
                     className="w-11/12 h-10 outline-none pr-2 bg-gray-50"
                     placeholder="Ask your questions ..."

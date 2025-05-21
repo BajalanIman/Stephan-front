@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Box, IconButton, Tooltip, Typography } from "@mui/material";
+import React, { useState, useEffect, useRef } from "react";
+import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import ViewSidebarRounded from "@mui/icons-material/ViewSidebarRounded";
 import TravelExploreOutlined from "@mui/icons-material/TravelExploreOutlined";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
@@ -7,8 +7,15 @@ import axios from "axios";
 import LoadingPage from "./LoadingPage";
 import Chats from "./Chats";
 import AdminPanel from "../Admin/AdminPanel";
-// import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { BASE_URL } from "../../constants/constants";
+import Footer from "../Footer/Footer";
+import {
+  Info,
+  KeyboardDoubleArrowDown,
+  KeyboardDoubleArrowUp,
+} from "@mui/icons-material";
+import Sidebar from "../Sidebar/Sidebar";
+import QuestionsAnswer from "../Footer/QuestionsAnswer";
 
 const Conversation = () => {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -28,6 +35,7 @@ const Conversation = () => {
   useEffect(() => {
     if (userId !== null) {
       fetchConversations();
+      console.log(userId);
     }
   }, [userId]);
 
@@ -46,7 +54,6 @@ const Conversation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!searchInput.trim()) return;
-    // const response = await axios.post("http://127.0.0.1:5000/chat", payload,
 
     const payload = { messages: searchInput };
     setShowLoading(true);
@@ -102,9 +109,21 @@ const Conversation = () => {
     }
   };
 
+  const [showFooter, setShowFooter] = useState(true);
+
+  const footerBtnHandler = () => {
+    setShowFooter(!showFooter);
+  };
+
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "auto" }); // or 'smooth'
+  }, []);
+
   return (
-    <div className="w-full h-[100%] flex relative">
-      {!showSidebar && (
+    <div className="w-full h-[100%] flex relative flex-col ">
+      {/* {!showSidebar && (
         <Box
           sx={{
             height: 35,
@@ -129,7 +148,16 @@ const Conversation = () => {
             </IconButton>
           </Tooltip>
         </Box>
-      )}
+      )} */}
+      <Sidebar
+        showSidebar={showSidebar}
+        setShowSidebar={setShowSidebar}
+        conversations={conversations}
+        customConversationId={customConversationId}
+        setCustomChat={setCustomChat}
+        setCustomConversationId={setCustomConversationId}
+      />
+
       <Box
         sx={{
           width: showSidebar ? "300px" : "0",
@@ -217,9 +245,6 @@ const Conversation = () => {
               >
                 {conv.title}
               </Typography>
-              {/* <DeleteForeverIcon
-                style={{ color: "gray", width: 16, cursor: "pointer" }}
-              /> */}
             </Box>
           ))}
         </Box>
@@ -231,8 +256,7 @@ const Conversation = () => {
               display: "flex",
               flexDirection: "column",
               ml: showSidebar ? "300px" : "0",
-              transition: "width 1.5s linear",
-              transform: showSidebar ? "translateX(-100)" : "translateX(0%)",
+              transition: "margin-left 1s ease-in-out",
             }}
           >
             <Box
@@ -281,6 +305,39 @@ const Conversation = () => {
           </Box>
         </div>
       </div>
+      <Box
+        sx={{
+          mt: 2,
+          ml: showSidebar ? "300px" : 0,
+          ml: showSidebar ? "300px" : "0",
+          transition: "margin-left 1s ease-in-out",
+        }}
+      >
+        <Button
+          onClick={footerBtnHandler}
+          sx={{
+            minWidth: 0,
+            width: 24,
+            height: 24,
+            bgcolor: "white",
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            border: 1,
+            marginLeft: 3,
+            borderColor: "gray",
+            padding: 0,
+          }}
+        >
+          {showFooter && (
+            <KeyboardDoubleArrowDown sx={{ width: 16, height: 16 }} />
+          )}
+          {!showFooter && (
+            <KeyboardDoubleArrowUp sx={{ width: 16, height: 16 }} />
+          )}
+        </Button>
+        {showFooter ? <Footer /> : <QuestionsAnswer />}
+      </Box>
+      <div ref={bottomRef} />
     </div>
   );
 };

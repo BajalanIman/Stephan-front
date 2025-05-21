@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Tooltip, Typography } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import adaptLogo from "./../../assets/Images/adaptLogo.png";
@@ -44,6 +44,12 @@ const Chats = ({ customChat }) => {
     const utterance = new SpeechSynthesisUtterance(text);
     synth.speak(utterance);
   };
+
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "auto" });
+  }, [customChat]);
 
   return (
     <div className="w-full h-[100%] min-h-screen pb-10">
@@ -161,6 +167,7 @@ const Chats = ({ customChat }) => {
           </div>
         </Box>
       ))}
+      <div ref={bottomRef} />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import ViewSidebarRounded from "@mui/icons-material/ViewSidebarRounded";
 import TravelExploreOutlined from "@mui/icons-material/TravelExploreOutlined";
@@ -115,11 +115,13 @@ const Conversation = () => {
     setShowFooter(!showFooter);
   };
 
-  const bottomRef = useRef(null);
-
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "auto" }); // or 'smooth'
-  }, []);
+    if (showFooter) {
+      setTimeout(() => {
+        setShowFooter(false);
+      }, 20000);
+    }
+  }, [showFooter]);
 
   return (
     <div className="w-full h-[100%] flex relative flex-col ">
@@ -305,39 +307,41 @@ const Conversation = () => {
           </Box>
         </div>
       </div>
-      <Box
-        sx={{
-          mt: 2,
-          ml: showSidebar ? "300px" : 0,
-          ml: showSidebar ? "300px" : "0",
-          transition: "margin-left 1s ease-in-out",
-        }}
-      >
-        <Button
-          onClick={footerBtnHandler}
+
+      {!showLoading && (
+        <Box
           sx={{
-            minWidth: 0,
-            width: 24,
-            height: 24,
-            bgcolor: "white",
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-            border: 1,
-            marginLeft: 3,
-            borderColor: "gray",
-            padding: 0,
+            mt: 2,
+            ml: showSidebar ? "300px" : 0,
+            ml: showSidebar ? "300px" : "0",
+            transition: "margin-left 1s ease-in-out",
           }}
         >
-          {showFooter && (
-            <KeyboardDoubleArrowDown sx={{ width: 16, height: 16 }} />
-          )}
-          {!showFooter && (
-            <KeyboardDoubleArrowUp sx={{ width: 16, height: 16 }} />
-          )}
-        </Button>
-        {showFooter ? <Footer /> : <QuestionsAnswer />}
-      </Box>
-      <div ref={bottomRef} />
+          <Button
+            onClick={footerBtnHandler}
+            sx={{
+              minWidth: 0,
+              width: 24,
+              height: 24,
+              bgcolor: "white",
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+              border: 1,
+              marginLeft: 3,
+              borderColor: "gray",
+              padding: 0,
+            }}
+          >
+            {showFooter && (
+              <KeyboardDoubleArrowDown sx={{ width: 16, height: 16 }} />
+            )}
+            {!showFooter && (
+              <KeyboardDoubleArrowUp sx={{ width: 16, height: 16 }} />
+            )}
+          </Button>
+          {showFooter ? <Footer /> : <QuestionsAnswer />}
+        </Box>
+      )}
     </div>
   );
 };

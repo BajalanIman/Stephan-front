@@ -38,15 +38,19 @@ const Footer = () => {
                 About Us
               </Typography>
               <Typography variant="body2" color="text.secondary">
+                <strong>LLM Developer:</strong> Stephan Playfair
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
                 <strong>Frontend developer:</strong> Iman Bajalan
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                <strong> Backend developer:</strong> Stephan Playfair
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
                 {"Copyright © "}
-                <Link color="inherit" href="https://your-website.com/">
-                  Your Website
+                <Link
+                  color="inherit"
+                  href="https://wald-reallabor.de/"
+                  target="_blank"
+                >
+                  ADAPT-Wald-Holz
                 </Link>{" "}
                 {new Date().getFullYear()}
                 {"."}
@@ -72,7 +76,7 @@ const Footer = () => {
                 color="text.secondary"
                 sx={{ fontSize: 11 }}
               >
-                <strong>Email:</strong> Stephan.Playfair[at]zalf.de
+                <strong>Email:</strong> Stephan.Playfair@zalf.de
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 <strong> Phone:</strong> +49 3334 657 414
